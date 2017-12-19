@@ -41,38 +41,31 @@ get_bash_info() {
 job_node_info() {
   get_machine_info
   ret=$?
-  [ "$ret" != 0 ] && return $ret;
-  is_success=true
+  [ "$ret" != 0 ] && exit $ret;
 
   get_disk_info
   ret=$?
-  [ "$ret" != 0 ] && return $ret;
-  is_success=true
+  [ "$ret" != 0 ] && exit $ret;
 
   get_mem_info
   ret=$?
-  [ "$ret" != 0 ] && return $ret;
-  is_success=true
+  [ "$ret" != 0 ] && exit $ret;
 
   check_docker_daemon
   ret=$?
-  [ "$ret" != 0 ] && return $ret;
-  is_success=true
+  [ "$ret" != 0 ] && exit $ret;
 
   get_docker_info
   ret=$?
-  [ "$ret" != 0 ] && return $ret;
-  is_success=true
+  [ "$ret" != 0 ] && exit $ret;
 
   get_docker_containers
   ret=$?
-  [ "$ret" != 0 ] && return $ret;
-  is_success=true
+  [ "$ret" != 0 ] && exit $ret;
 
   get_bash_info
   ret=$?
-  [ "$ret" != 0 ] && return $ret;
-  is_success=true
+  [ "$ret" != 0 ] && exit $ret;
 }
 
 job_node_info

@@ -60,12 +60,10 @@ init_integrations() {
 }
 
 task() {
-  ret=0
-  is_success=false
-
   init_integrations
   trap before_exit EXIT
-  [ "$ret" != 0 ] && return $ret;
+  ret=$?
+  [ "$ret" != 0 ] && exit $ret;
 
   <% _.each(obj.script, function(cmd) { %>
   <% var cmdEscaped = cmd.replace(/\\/g, '\\\\')%>
@@ -81,16 +79,12 @@ task() {
   // and override what we need.
   %>
   trap before_exit EXIT
-  [ "$ret" != 0 ] && return $ret;
+  [ "$ret" != 0 ] && exit $ret;
   <% }); %>
 
   cleanup_integrations
   trap before_exit EXIT
-  [ "$ret" != 0 ] && return $ret;
-
-  ret=0
-  is_success=true
-  return $ret
+  [ "$ret" != 0 ] && exit $ret;
 }
 
 cleanup_integrations() {
@@ -105,12 +99,9 @@ cleanup_integrations() {
 }
 
 if [ "$TASK_IN_CONTAINER" == true ]; then
-  trap before_exit EXIT
   exec_grp "symlink_build_dir" "Symlinking /build dir" "false"
 fi
 
-trap before_exit EXIT
 exec_grp "add_subscription_ssh_key" "Adding Subscription SSH Key" "false"
 
-trap before_exit EXIT
 exec_grp "task" "Executing task: $TASK_NAME"

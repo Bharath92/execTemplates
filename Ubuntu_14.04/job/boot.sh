@@ -3,9 +3,6 @@
 #
 
 boot() {
-  ret=0
-  is_success=false
-
   if [ "$TASK_CONTAINER_IMAGE_SHOULD_PULL" == true ]; then
     exec_cmd "sudo docker pull $TASK_CONTAINER_IMAGE"
   fi
@@ -13,9 +10,7 @@ boot() {
   exec_cmd "sudo docker run $TASK_CONTAINER_OPTIONS $TASK_CONTAINER_IMAGE $TASK_CONTAINER_COMMAND"
   ret=$?
   trap before_exit EXIT
-  [ "$ret" != 0 ] && return $ret;
-
-  is_success=true
+  [ "$ret" != 0 ] && exit $ret;
 }
 
 trap before_exit EXIT
